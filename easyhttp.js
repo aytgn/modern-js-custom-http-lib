@@ -23,3 +23,16 @@ easyHTTP.prototype.get = function (url, cb) {
     }
   };
 };
+//Make an HTTP POST Request
+easyHTTP.prototype.post = function (url, data, cb) {
+  //Create post request, to url, async
+  this.http.open("POST", url, true);
+  //send that request
+  this.http.send(JSON.stringify(data));
+  let self = this;
+  this.http.onload = function () {
+    cb(null, self.http.responseText);
+  };
+  //define content type
+  this.http.setRequestHeader("Content-type", "application/json");
+};
