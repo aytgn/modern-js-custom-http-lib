@@ -1,22 +1,22 @@
 class EasyHttp {
-  //get(url) method will return json promise
+  //get(url) method will return promise
   get = (url) => {
     //this promise will fetch the url
     return new Promise((resolve, reject) => {
       fetch(url)
         .then((res) => {
-          //get the appended json response, if response is okay
+          //then get the appended json response, if response is okay
           if (res.status === 200) return res.json();
           else {
             throw new Error("error");
           }
         })
         .then((data) => {
-          //say created promise that upon resolve bring that json
+          //say created promise upon resolve bring that json
           resolve(data);
         })
         .catch((err) => {
-          //say created promise that upon reject bring that error
+          //say created promise upon reject bring that error
           reject(err);
         });
     });
