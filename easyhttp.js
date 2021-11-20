@@ -1,38 +1,62 @@
 function easyHTTP() {
-  //our http prop is an xmr instance
   this.http = new XMLHttpRequest();
 }
-//Make an HTTP GET Request
-//should take cb to wait response fully return (async)
-easyHTTP.prototype.get = function (url, cb) {
-  //"create a get request to url async"
-  this.http.open("GET", url, true);
-  //send that request
-  this.http.send();
-  //when response arrive to bellow
-  //"this" keyword refers owner(parent,wrapper) class,object,function. wrapper of function bellow is http not easyHttp but XMLHHttpRequest! so pin easyHTTP with let self = this to "self" keyword
+
+// Make an HTTP GET Request
+easyHTTP.prototype.get = function(url, callback) {
+  this.http.open('GET', url, true);
+
   let self = this;
-  this.http.onload = function () {
-    //if response is okay
-    console.log(this);
-    if (self.http.status === 200) {
-      //since http onload async by default, methods will run async inside. cb will wait response done.
-      cb(null, self.http.responseText);
+  this.http.onload = function() {
+    if(self.http.status === 200) {
+      callback(null, self.http.responseText);
     } else {
-      cb("Error: " + self.http.status);
+      callback('Error: ' + self.http.status);
     }
-  };
-};
-//Make an HTTP POST Request
-easyHTTP.prototype.post = function (url, data, cb) {
-  //Create post request, to url, async
-  this.http.open("POST", url, true);
-  //send that request
-  this.http.send(JSON.stringify(data));
+  }
+
+  this.http.send();
+}
+
+// Make an HTTP POST Request
+easyHTTP.prototype.post = function(url, data, callback) {
+  this.http.open('POST', url, true);
+  this.http.setRequestHeader('Content-type', 'application/json');
+
   let self = this;
-  this.http.onload = function () {
-    cb(null, self.http.responseText);
-  };
-  //define content type
-  this.http.setRequestHeader("Content-type", "application/json");
-};
+  this.http.onload = function() {
+    callback(null, self.http.responseText);
+  }
+
+  this.http.send(JSON.stringify(data));
+}
+
+
+// Make an HTTP PUT Request
+easyHTTP.prototype.put = function(url, data, callback) {
+  this.http.open('PUT', url, true);
+  this.http.setRequestHeader('Content-type', 'application/json');
+
+  let self = this;
+  this.http.onload = function() {
+    callback(null, self.http.responseText);
+  }
+
+  this.http.send(JSON.stringify(data));
+}
+
+// Make an HTTP DELETE Request
+easyHTTP.prototype.delete = function(url, callback) {
+  this.http.open('DELETE', url, true);
+
+  let self = this;
+  this.http.onload = function() {
+    if(self.http.status === 200) {
+      callback(null, 'Post Deleted');
+    } else {
+      callback('Error: ' + self.http.status);
+    }
+  }
+
+  this.http.send();
+}
